@@ -1,0 +1,408 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="AgendaDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Asignatura">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Semestre" Type="int" Nullable="false" />
+          <Property Name="Seccion" Type="varchar" MaxLength="5" />
+          <Property Name="Docente" Type="varchar" MaxLength="25" />
+          <Property Name="AsistenciaId" Type="int" />
+          <Property Name="ExamenId" Type="int" />
+          <Property Name="Estado" Type="int" Nullable="false" />
+          <Property Name="UsuarioId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Asistencia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HorasTotales" Type="int" Nullable="false" />
+          <Property Name="PorcentajeMinimo" Type="int" Nullable="false" />
+          <Property Name="Estado" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Examen">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nota" Type="float" Nullable="false" />
+          <Property Name="Porcentaje" Type="int" Nullable="false" />
+          <Property Name="Estado" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Horario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Fecha" Type="date" Nullable="false" />
+          <Property Name="Bloques" Type="int" Nullable="false" />
+          <Property Name="Estado" Type="int" Nullable="false" />
+          <Property Name="AsistenciaId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Notas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nota" Type="float" Nullable="false" />
+          <Property Name="Porcentaje" Type="int" Nullable="false" />
+          <Property Name="Estado" Type="int" Nullable="false" />
+          <Property Name="AsignaturaId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Estado" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AAsistenciaId">
+          <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="0..1" />
+          <End Role="Asignatura" Type="Self.Asignatura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asistencia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Asignatura">
+              <PropertyRef Name="AsistenciaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AsignaturaId">
+          <End Role="Asignatura" Type="Self.Asignatura" Multiplicity="1" />
+          <End Role="Notas" Type="Self.Notas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asignatura">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notas">
+              <PropertyRef Name="AsignaturaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AsistenciaId">
+          <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="1" />
+          <End Role="Horario" Type="Self.Horario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asistencia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Horario">
+              <PropertyRef Name="AsistenciaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamenId">
+          <End Role="Examen" Type="Self.Examen" Multiplicity="0..1" />
+          <End Role="Asignatura" Type="Self.Asignatura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Examen">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Asignatura">
+              <PropertyRef Name="ExamenId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsuarioId">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Asignatura" Type="Self.Asignatura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Asignatura">
+              <PropertyRef Name="UsuarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AgendaDBModelStoreContainer">
+          <EntitySet Name="Asignatura" EntityType="Self.Asignatura" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Asistencia" EntityType="Self.Asistencia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Examen" EntityType="Self.Examen" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Horario" EntityType="Self.Horario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notas" EntityType="Self.Notas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AAsistenciaId" Association="Self.FK_AAsistenciaId">
+            <End Role="Asistencia" EntitySet="Asistencia" />
+            <End Role="Asignatura" EntitySet="Asignatura" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AsignaturaId" Association="Self.FK_AsignaturaId">
+            <End Role="Asignatura" EntitySet="Asignatura" />
+            <End Role="Notas" EntitySet="Notas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AsistenciaId" Association="Self.FK_AsistenciaId">
+            <End Role="Asistencia" EntitySet="Asistencia" />
+            <End Role="Horario" EntitySet="Horario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamenId" Association="Self.FK_ExamenId">
+            <End Role="Examen" EntitySet="Examen" />
+            <End Role="Asignatura" EntitySet="Asignatura" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsuarioId" Association="Self.FK_UsuarioId">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Asignatura" EntitySet="Asignatura" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AgendaDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Asignatura">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Semestre" Type="Int32" Nullable="false" />
+          <Property Name="Seccion" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Docente" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Asistencia" Relationship="Self.FK_AAsistenciaId" FromRole="Asignatura" ToRole="Asistencia" />
+          <NavigationProperty Name="Notas" Relationship="Self.FK_AsignaturaId" FromRole="Asignatura" ToRole="Notas" />
+          <NavigationProperty Name="Examen" Relationship="Self.FK_ExamenId" FromRole="Asignatura" ToRole="Examen" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK_UsuarioId" FromRole="Asignatura" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Asistencia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="HorasTotales" Type="Int32" Nullable="false" />
+          <Property Name="PorcentajeMinimo" Type="Int32" Nullable="false" />
+          <Property Name="Estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Asignatura" Relationship="Self.FK_AAsistenciaId" FromRole="Asistencia" ToRole="Asignatura" />
+          <NavigationProperty Name="Horario" Relationship="Self.FK_AsistenciaId" FromRole="Asistencia" ToRole="Horario" />
+        </EntityType>
+        <EntityType Name="Examen">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Nota" Type="Double" Nullable="false" />
+          <Property Name="Porcentaje" Type="Int32" Nullable="false" />
+          <Property Name="Estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Asignatura" Relationship="Self.FK_ExamenId" FromRole="Examen" ToRole="Asignatura" />
+        </EntityType>
+        <EntityType Name="Horario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Bloques" Type="Int32" Nullable="false" />
+          <Property Name="Estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Asistencia" Relationship="Self.FK_AsistenciaId" FromRole="Horario" ToRole="Asistencia" />
+        </EntityType>
+        <EntityType Name="Notas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Nota" Type="Double" Nullable="false" />
+          <Property Name="Porcentaje" Type="Int32" Nullable="false" />
+          <Property Name="Estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Asignatura" Relationship="Self.FK_AsignaturaId" FromRole="Notas" ToRole="Asignatura" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Asignatura" Relationship="Self.FK_UsuarioId" FromRole="Usuario" ToRole="Asignatura" />
+        </EntityType>
+        <Association Name="FK_AAsistenciaId">
+          <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="0..1" />
+          <End Role="Asignatura" Type="Self.Asignatura" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_AsignaturaId">
+          <End Role="Asignatura" Type="Self.Asignatura" Multiplicity="1" />
+          <End Role="Notas" Type="Self.Notas" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_ExamenId">
+          <End Role="Examen" Type="Self.Examen" Multiplicity="0..1" />
+          <End Role="Asignatura" Type="Self.Asignatura" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_UsuarioId">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Asignatura" Type="Self.Asignatura" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_AsistenciaId">
+          <End Role="Asistencia" Type="Self.Asistencia" Multiplicity="1" />
+          <End Role="Horario" Type="Self.Horario" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="AgendaDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Asignatura" EntityType="Self.Asignatura" />
+          <EntitySet Name="Asistencia" EntityType="Self.Asistencia" />
+          <EntitySet Name="Examen" EntityType="Self.Examen" />
+          <EntitySet Name="Horario" EntityType="Self.Horario" />
+          <EntitySet Name="Notas" EntityType="Self.Notas" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+          <AssociationSet Name="FK_AAsistenciaId" Association="Self.FK_AAsistenciaId">
+            <End Role="Asistencia" EntitySet="Asistencia" />
+            <End Role="Asignatura" EntitySet="Asignatura" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AsignaturaId" Association="Self.FK_AsignaturaId">
+            <End Role="Asignatura" EntitySet="Asignatura" />
+            <End Role="Notas" EntitySet="Notas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamenId" Association="Self.FK_ExamenId">
+            <End Role="Examen" EntitySet="Examen" />
+            <End Role="Asignatura" EntitySet="Asignatura" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsuarioId" Association="Self.FK_UsuarioId">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Asignatura" EntitySet="Asignatura" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AsistenciaId" Association="Self.FK_AsistenciaId">
+            <End Role="Asistencia" EntitySet="Asistencia" />
+            <End Role="Horario" EntitySet="Horario" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AgendaDBModelStoreContainer" CdmEntityContainer="AgendaDBEntities">
+          <EntitySetMapping Name="Asignatura">
+            <EntityTypeMapping TypeName="AgendaDBModel.Asignatura">
+              <MappingFragment StoreEntitySet="Asignatura">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Semestre" ColumnName="Semestre" />
+                <ScalarProperty Name="Seccion" ColumnName="Seccion" />
+                <ScalarProperty Name="Docente" ColumnName="Docente" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Asistencia">
+            <EntityTypeMapping TypeName="AgendaDBModel.Asistencia">
+              <MappingFragment StoreEntitySet="Asistencia">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="HorasTotales" ColumnName="HorasTotales" />
+                <ScalarProperty Name="PorcentajeMinimo" ColumnName="PorcentajeMinimo" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Examen">
+            <EntityTypeMapping TypeName="AgendaDBModel.Examen">
+              <MappingFragment StoreEntitySet="Examen">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nota" ColumnName="Nota" />
+                <ScalarProperty Name="Porcentaje" ColumnName="Porcentaje" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Horario">
+            <EntityTypeMapping TypeName="AgendaDBModel.Horario">
+              <MappingFragment StoreEntitySet="Horario">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Bloques" ColumnName="Bloques" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notas">
+            <EntityTypeMapping TypeName="AgendaDBModel.Notas">
+              <MappingFragment StoreEntitySet="Notas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nota" ColumnName="Nota" />
+                <ScalarProperty Name="Porcentaje" ColumnName="Porcentaje" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuario">
+            <EntityTypeMapping TypeName="AgendaDBModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FK_AAsistenciaId" TypeName="AgendaDBModel.FK_AAsistenciaId" StoreEntitySet="Asignatura">
+            <EndProperty Name="Asistencia">
+              <ScalarProperty Name="Id" ColumnName="AsistenciaId" />
+            </EndProperty>
+            <EndProperty Name="Asignatura">
+              <ScalarProperty Name="Id" ColumnName="Id" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="AsistenciaId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_AsignaturaId" TypeName="AgendaDBModel.FK_AsignaturaId" StoreEntitySet="Notas">
+            <EndProperty Name="Asignatura">
+              <ScalarProperty Name="Id" ColumnName="AsignaturaId" />
+            </EndProperty>
+            <EndProperty Name="Notas">
+              <ScalarProperty Name="Id" ColumnName="Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_ExamenId" TypeName="AgendaDBModel.FK_ExamenId" StoreEntitySet="Asignatura">
+            <EndProperty Name="Examen">
+              <ScalarProperty Name="Id" ColumnName="ExamenId" />
+            </EndProperty>
+            <EndProperty Name="Asignatura">
+              <ScalarProperty Name="Id" ColumnName="Id" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="ExamenId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_UsuarioId" TypeName="AgendaDBModel.FK_UsuarioId" StoreEntitySet="Asignatura">
+            <EndProperty Name="Usuario">
+              <ScalarProperty Name="Id" ColumnName="UsuarioId" />
+            </EndProperty>
+            <EndProperty Name="Asignatura">
+              <ScalarProperty Name="Id" ColumnName="Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_AsistenciaId" TypeName="AgendaDBModel.FK_AsistenciaId" StoreEntitySet="Horario">
+            <EndProperty Name="Asistencia">
+              <ScalarProperty Name="Id" ColumnName="AsistenciaId" />
+            </EndProperty>
+            <EndProperty Name="Horario">
+              <ScalarProperty Name="Id" ColumnName="Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
